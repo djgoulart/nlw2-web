@@ -2,38 +2,57 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
+import api from '../../services/api';
 
-const TeacherItem: React.FC = () => {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  user_id: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function handleCreateConnection() {
+    api.post('connections', {
+      user_id: teacher.user_id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img 
-          src="https://avatars2.githubusercontent.com/u/10280312?s=460&u=353bf0df7bc3f6867d881749394f19fe71927607&v=4"
-          alt="Diego Goulart"/>
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Diego Goulart</strong>
-          <span>História</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Entusista pela história das grandes gerras em todos os seus aspectos.
-        <br/><br/>
-        Apaixonado pelos detalhes escondidos em documentos secretos que contam os fatos
-        ocorridos durante as grandes guerras.
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 60,00</strong>
+          <strong>{teacher.cost}</strong>
         </p>
-        <button type="button">
-          <img src={whatsappIcon} alt="Whatsapp"/>
+        <a
+          target="__blank"
+          href={`https://wa.me/${teacher.whatsapp}`}
+          onClick={handleCreateConnection}
+        >
+          <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
